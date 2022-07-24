@@ -74,7 +74,7 @@ async def add_payment(message: types.Message):
     await bot.send_message(message.chat.id, text, parse_mode='html')
 
 
-@dp.message_handler(commands='make_payment')
+@dp.message_handler(commands=['make_payment', 'mp'])
 async def make_payment(message: types.Message):
     args = message.get_args()
 
