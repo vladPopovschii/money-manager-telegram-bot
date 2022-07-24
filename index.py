@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from operator import imod
 from aiogram import Bot, Dispatcher, executor, types
 import logging
