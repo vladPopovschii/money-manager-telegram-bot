@@ -77,8 +77,6 @@ def generate_loans(populated_map: dict) -> str:
                 "debt": (max_amount - populated_map[user_id]["amount"]) / len(populated_map)
             }
 
-    print(user_debts)
-
     for user_id in user_debts:
         loan_string = loan_string + '<b>' + \
             user_debts[user_id]["fullname"] + "</b> has to pay: " + \

@@ -7,7 +7,8 @@ class Chat:
         self.collection = collection
 
     def chat_exists(self, chat_id: int, user_id: int) -> bool:
-        doc = self.collection.find_one({"user_id": user_id, "chat_id": chat_id})
+        doc = self.collection.find_one(
+            {"user_id": user_id, "chat_id": chat_id})
 
         if doc:
             return True

@@ -23,8 +23,8 @@ class User:
 
     def get_users_by_ids(self, user_ids: list) -> list:
         result = self.collection.find({
-            "user_id":{
-                "$in": user_ids   
+            "user_id": {
+                "$in": user_ids
             }
         })
 

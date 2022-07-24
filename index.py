@@ -1,3 +1,4 @@
+from operator import imod
 from aiogram import Bot, Dispatcher, executor, types
 import logging
 import config
@@ -10,6 +11,7 @@ import models.total as total
 
 import keyboards.main
 from utils import calc_totals, generate_history_markup, generate_loans, generate_markup, populate_username
+from info.info import get_info_markup
 
 logging.basicConfig(level=logging.INFO)
 
@@ -54,7 +56,8 @@ async def add_payment(message: types.Message):
     for user in totalMap:
         user_ids.append(user)
 
-    populated_map = populate_username(totalMap, users.get_users_by_ids(user_ids))
+    populated_map = populate_username(
+        totalMap, users.get_users_by_ids(user_ids))
 
     markup = generate_markup(populated_map)
 
@@ -62,11 +65,10 @@ async def add_payment(message: types.Message):
 
     payload = (markup + "\n\n" + loans_markup).strip()
 
-    print(payload)
-
     text = payload if payload != '' else 'No data'
 
     await bot.send_message(message.chat.id, text, parse_mode='html')
+
 
 @dp.message_handler(commands='make_payment')
 async def make_payment(message: types.Message):
@@ -95,9 +97,10 @@ async def make_payment(message: types.Message):
         )
 
         return await message.reply('Payment successfully added')
-            
+
     except:
         return await message.reply('Invalid amount, should be positive number')
+
 
 @dp.message_handler(commands='history')
 async def history(message: types.Message):
@@ -109,13 +112,20 @@ async def history(message: types.Message):
 
     user_ids = list(user_ids_raw)
 
-    markup = generate_history_markup(payments_list, users.get_users_by_ids(user_ids))
+    markup = generate_history_markup(
+        payments_list, users.get_users_by_ids(user_ids))
 
     await bot.send_message(message.chat.id, "<b>Global history</b>\n" + markup, parse_mode='html')
 
+
 @dp.message_handler(commands='make_total')
 async def make_total(message: types.Message):
-    total_id = totals.create_total(message.chat.id, payments.get_opened_payments(message.chat.id))
+
+    await bot.send_message('Sorry, not implemented yet!')
+    return
+    # TODO implement
+    total_id = totals.create_total(
+        message.chat.id, payments.get_opened_payments(message.chat.id))
     payments.close_payments(message.chat.id)
 
     total_map = totals.get_total(message.chat.id, total_id)
@@ -123,6 +133,10 @@ async def make_total(message: types.Message):
 
     await bot.send_message(message.chat.id, "Total registered!", parse_mode='html')
 
+
+@dp.message_handler(commands='info')
+async def info(message: types.Message):
+    await bot.send_message(message.chat.id, get_info_markup(), parse_mode='html')
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
